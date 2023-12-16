@@ -9,6 +9,7 @@ public enum ExceptionMessage {
     INVALID_NICKNAME_LENGTH("사원의 닉네임은 최대 5글자까지 가능합니다."),
     INVALID_NICKNAME_CHARACTER("사원의 닉네임은 한글만 가능합니다."),
     DUPLICATED_NICKNAME("한 근무에 사원이 중복될 수 없습니다."),
+    WORKER_NOT_MATCHED("평일 사원과 휴일 사원이 일치하지 않습니다."),
     ;
 
     private static final String PREFIX = "[ERROR] ";
