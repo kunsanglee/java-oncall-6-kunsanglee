@@ -21,7 +21,6 @@ import oncall.domain.Day;
 import oncall.domain.Worker;
 
 public class InputView {
-
     private static final String COMMA = ",";
     private static final int DEFAULT_YEAR = 2023;
     private static final int DEFAULT_FIRST_DAY = 1;

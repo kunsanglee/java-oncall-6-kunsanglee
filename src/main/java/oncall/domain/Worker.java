@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Worker {
+    private static final int INCREASE_DATE = 1;
+    private static final int OFFSET = 1;
     private final List<String> weekdayWorkers;
     private final List<String> holidayWorkers;
 
@@ -18,49 +20,34 @@ public class Worker {
     public List<EmergencyWorker> makeEmergencyWork(LocalDate date) {
         LocalDate lastDayOfMonth = date.with(TemporalAdjusters.lastDayOfMonth());
         List<EmergencyWorker> emergencyWorkers = new ArrayList<>();
-        System.out.println(date.getDayOfMonth());
         int weekdayIndex = 0;
         int holidayIndex = 0;
-        while (date.isBefore(lastDayOfMonth) || date.isEqual(lastDayOfMonth)) { // 마지막날까지 반복
-            DayOfWeek dayOfWeek = date.getDayOfWeek();
-            int size = emergencyWorkers.size();
-            if (dayOfWeek.equals(DayOfWeek.SATURDAY) || dayOfWeek.equals(DayOfWeek.SUNDAY)) {
-                // 주말인원 투입
-                String worker = holidayWorkers.get(holidayIndex);
-                // 그전날 인원과 같으면 다음 주말 사원과 바꾼다.
-                if (size != 0 && emergencyWorkers.get(size - 1).isSame(worker)) {
-                    int index = (holidayIndex + 1) % holidayWorkers.size();
-                    String nextWorker = holidayWorkers.get(index);
-                    holidayWorkers.set(holidayIndex, nextWorker); // 순서를 아예 바꾸는게 맞을지
-                    holidayWorkers.set(index, worker);
-                    emergencyWorkers.add(new EmergencyWorker(nextWorker, date));
-                    date = date.plusDays(1);
-                    holidayIndex = (holidayIndex + 1) % holidayWorkers.size();
-                    continue;
-                }
-                emergencyWorkers.add(new EmergencyWorker(worker, date));
-                date = date.plusDays(1);
-                holidayIndex = (holidayIndex + 1) % holidayWorkers.size();
+        while (!date.isAfter(lastDayOfMonth)) {
+            if (isWeekend(date) || Holiday.isHoliday(date)) {
+                holidayIndex = assignWorkerAndAdjustIndex(emergencyWorkers, holidayWorkers, holidayIndex, date);
+                date = date.plusDays(INCREASE_DATE);
                 continue;
             }
-            // 평일 투입
-            // 그전날 사원과 동일인물이면 다음 사원과 자리 바꾼다.
-            String worker = weekdayWorkers.get(weekdayIndex);
-            // 그전날 인원과 같으면 다음 주말 사원과 바꾼다.
-            if (size != 0 && emergencyWorkers.get(size - 1).isSame(worker)) {
-                int index = (weekdayIndex + 1) % holidayWorkers.size();
-                String nextWorker = weekdayWorkers.get(index);
-                weekdayWorkers.set(weekdayIndex, nextWorker); // 순서를 아예 바꾸는게 맞을지
-                weekdayWorkers.set(index, worker);
-                emergencyWorkers.add(new EmergencyWorker(nextWorker, date));
-                weekdayIndex = (weekdayIndex + 1) % weekdayWorkers.size();
-                date = date.plusDays(1);
-                continue;
-            }
-            emergencyWorkers.add(new EmergencyWorker(worker, date));
-            weekdayIndex = (weekdayIndex + 1) % weekdayWorkers.size();
-            date = date.plusDays(1);
+            weekdayIndex = assignWorkerAndAdjustIndex(emergencyWorkers, weekdayWorkers, weekdayIndex, date);
+            date = date.plusDays(INCREASE_DATE);
         }
         return emergencyWorkers;
     }
+
+    private boolean isWeekend(LocalDate date) {
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+        return dayOfWeek.equals(DayOfWeek.SATURDAY) || dayOfWeek.equals(DayOfWeek.SUNDAY);
+    }
+
+    private int assignWorkerAndAdjustIndex(List<EmergencyWorker> emergencyWorkers, List<String> workers, int index,
+                                           LocalDate date) {
+        String worker = workers.get(index);
+        if (!emergencyWorkers.isEmpty() && emergencyWorkers.get(emergencyWorkers.size() - OFFSET).isSame(worker)) {
+            index = (index + OFFSET) % workers.size();
+            worker = workers.get(index);
+        }
+        emergencyWorkers.add(new EmergencyWorker(worker, date));
+        return (index + OFFSET) % workers.size();
+    }
 }
+
