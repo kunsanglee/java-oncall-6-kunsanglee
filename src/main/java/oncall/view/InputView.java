@@ -37,7 +37,8 @@ public class InputView {
 
     public LocalDate readEmergencyWorkMonthDay() {
         System.out.print(INPUT_MONTH_DAY.getMessage());
-        List<String> parsedMonthDay = parseByComma(Console.readLine());
+        String input = Console.readLine();
+        List<String> parsedMonthDay = parseByComma(input);
         validateMonthDayForm(parsedMonthDay);
         int month = parseMonth(parsedMonthDay);
         validateMonth(month);
