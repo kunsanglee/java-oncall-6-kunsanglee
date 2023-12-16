@@ -17,7 +17,7 @@ public class Worker {
         this.holidayWorkers = holidayWorkers;
     }
 
-    public List<EmergencyWorker> makeEmergencyWork(LocalDate date) {
+    public EmergencyWorkers makeEmergencyWork(LocalDate date) {
         LocalDate lastDayOfMonth = date.with(TemporalAdjusters.lastDayOfMonth());
         List<EmergencyWorker> emergencyWorkers = new ArrayList<>();
         int weekdayIndex = 0;
@@ -31,7 +31,7 @@ public class Worker {
             weekdayIndex = assignWorkerAndAdjustIndex(emergencyWorkers, weekdayWorkers, weekdayIndex, date);
             date = date.plusDays(INCREASE_DATE);
         }
-        return emergencyWorkers;
+        return new EmergencyWorkers(emergencyWorkers);
     }
 
     private boolean isWeekend(LocalDate date) {

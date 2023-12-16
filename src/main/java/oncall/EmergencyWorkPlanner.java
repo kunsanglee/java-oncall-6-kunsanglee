@@ -3,8 +3,7 @@ package oncall;
 import static oncall.util.Retry.retry;
 
 import java.time.LocalDate;
-import java.util.List;
-import oncall.domain.EmergencyWorker;
+import oncall.domain.EmergencyWorkers;
 import oncall.domain.Worker;
 import oncall.view.InputView;
 import oncall.view.OutputView;
@@ -21,7 +20,7 @@ public class EmergencyWorkPlanner {
     public void run() {
         LocalDate localDate = retry(inputView::readEmergencyWorkMonthDay);
         Worker worker = retry(inputView::readWorker);
-        List<EmergencyWorker> emergencyWorkers = worker.makeEmergencyWork(localDate);
+        EmergencyWorkers emergencyWorkers = worker.makeEmergencyWork(localDate);
         outputView.printEmergencyWork(emergencyWorkers);
     }
 }

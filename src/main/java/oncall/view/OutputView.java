@@ -4,15 +4,14 @@ import static oncall.view.OutputView.OutputMessage.DATE_WORKER_FORMAT;
 import static oncall.view.OutputView.OutputMessage.HOLIDAY;
 
 import java.time.LocalDate;
-import java.util.List;
 import oncall.domain.Day;
-import oncall.domain.EmergencyWorker;
+import oncall.domain.EmergencyWorkers;
 import oncall.domain.Holiday;
 
 public class OutputView {
 
-    public void printEmergencyWork(List<EmergencyWorker> emergencyWorkers) {
-        emergencyWorkers.forEach(worker -> {
+    public void printEmergencyWork(EmergencyWorkers emergencyWorkers) {
+        emergencyWorkers.getEmergencyWorkers().forEach(worker -> {
             LocalDate localDate = worker.getLocalDate();
             String name = worker.getName();
             String dayOfWeek = Day.of(localDate.getDayOfWeek());
