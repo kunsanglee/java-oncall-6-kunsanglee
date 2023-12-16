@@ -11,7 +11,6 @@ public class EmergencyWorker {
         this.localDate = localDate;
     }
 
-
     public boolean isSame(String name) {
         return this.name.equals(name);
     }

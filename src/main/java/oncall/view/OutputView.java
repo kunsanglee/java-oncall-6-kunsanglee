@@ -3,7 +3,6 @@ package oncall.view;
 import static oncall.view.OutputView.OutputMessage.DATE_WORKER_FORMAT;
 import static oncall.view.OutputView.OutputMessage.HOLIDAY;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import oncall.domain.Day;
@@ -15,24 +14,20 @@ public class OutputView {
     public void printEmergencyWork(List<EmergencyWorker> emergencyWorkers) {
         emergencyWorkers.forEach(worker -> {
             LocalDate localDate = worker.getLocalDate();
-            DayOfWeek dayOfWeek = localDate.getDayOfWeek();
             String name = worker.getName();
-            if (!(dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) && Holiday.isHoliday(localDate)) {
-                printHolidayForm(localDate, Day.of(localDate.getDayOfWeek()) + HOLIDAY.getMessage(), name);
+            String dayOfWeek = Day.of(localDate.getDayOfWeek());
+            if (Holiday.isHoliday(localDate)) {
+                dayOfWeek += HOLIDAY;
             }
-            printDefaultForm(localDate, name);
+            printForm(localDate, dayOfWeek, name);
         });
     }
 
-    private static void printHolidayForm(LocalDate localDate, String localDate1, String name) {
+    private static void printForm(LocalDate localDate, String dayOfWeek, String name) {
         System.out.println(
                 String.format(DATE_WORKER_FORMAT.getMessage(), localDate.getMonth().getValue(),
                         localDate.getDayOfMonth(),
-                        localDate1, name));
-    }
-
-    private static void printDefaultForm(LocalDate localDate, String name) {
-        printHolidayForm(localDate, Day.of(localDate.getDayOfWeek()), name);
+                        dayOfWeek, name));
     }
 
     protected enum OutputMessage {
