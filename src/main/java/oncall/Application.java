@@ -1,7 +1,11 @@
 package oncall;
 
+import oncall.view.InputView;
+import oncall.view.OutputView;
+
 public class Application {
     public static void main(String[] args) {
-        // TODO: 프로그램 구현
+        EmergencyWorkPlanner emergencyWorkPlanner = new EmergencyWorkPlanner(new InputView(), new OutputView());
+        emergencyWorkPlanner.run();
     }
 }
