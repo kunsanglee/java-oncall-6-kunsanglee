@@ -18,7 +18,7 @@ import oncall.domain.Worker;
 
 public class InputView {
 
-    public int readEmergencyWorkMonthDay() {
+    public LocalDate readEmergencyWorkMonthDay() {
         System.out.print("비상 근무를 배정할 월과 시작 요일을 입력하세요> ");
         String input = Console.readLine();
         List<String> parsedMonthDay = parseByComma(input);
@@ -26,17 +26,17 @@ public class InputView {
         int month = parseMonth(parsedMonthDay);
         validateMonth(month);
         Day day = Day.of(parsedMonthDay.get(1));
-        validateDay(month, day);
-        return month;
+        return validateDay(month, day);
     }
 
     private static List<String> parseByComma(String input) {
         return Arrays.asList(input.split(","));
     }
 
-    private static void validateDay(int month, Day day) {
+    private static LocalDate validateDay(int month, Day day) {
         LocalDate localDate = LocalDate.of(2023, month, 1);
         validateDayOfMonth(day, localDate);
+        return localDate;
     }
 
     private static void validateMonthDayForm(List<String> parsedMonthDay) {

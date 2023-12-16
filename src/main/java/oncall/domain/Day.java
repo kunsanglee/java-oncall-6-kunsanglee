@@ -30,6 +30,14 @@ public enum Day {
                 .orElseThrow(() -> new IllegalArgumentException(INVALID_DAY_INPUT.getMessage()));
     }
 
+    public static String of(DayOfWeek dayOfWeek) {
+        return Arrays.stream(values())
+                .filter(day -> day.dayOfWeek.equals(dayOfWeek))
+                .findFirst()
+                .map(day -> day.name)
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_DAY_INPUT.getMessage()));
+    }
+
     public boolean isSame(DayOfWeek dayOfWeek) {
         return this.dayOfWeek.equals(dayOfWeek);
     }

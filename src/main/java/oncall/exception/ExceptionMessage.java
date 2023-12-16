@@ -11,10 +11,11 @@ public enum ExceptionMessage {
     DUPLICATED_NICKNAME("한 근무에 사원이 중복될 수 없습니다."),
     ;
 
+    private static final String PREFIX = "[ERROR] ";
     private final String message;
 
     ExceptionMessage(String message) {
-        this.message = message;
+        this.message = PREFIX + message;
     }
 
     public String getMessage() {
