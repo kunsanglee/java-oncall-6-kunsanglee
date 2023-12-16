@@ -42,12 +42,15 @@ public class Worker {
     private int assignWorkerAndAdjustIndex(List<EmergencyWorker> emergencyWorkers, List<String> workers, int index,
                                            LocalDate date) {
         String worker = workers.get(index);
+        int nextIndex = (index + OFFSET) % workers.size();
         if (!emergencyWorkers.isEmpty() && emergencyWorkers.get(emergencyWorkers.size() - OFFSET).isSame(worker)) {
-            index = (index + OFFSET) % workers.size();
-            worker = workers.get(index);
+            String nextWorker = workers.get(nextIndex);
+            workers.set(index, nextWorker);
+            workers.set(nextIndex, worker);
+            worker = nextWorker;
         }
         emergencyWorkers.add(new EmergencyWorker(worker, date));
-        return (index + OFFSET) % workers.size();
+        return nextIndex;
     }
 }
 
