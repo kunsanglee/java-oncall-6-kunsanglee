@@ -16,6 +16,8 @@ public class EmergencyWorkPlanner {
     public void run() {
         int month = retry(() -> inputView.readEmergencyWorkMonthDay());
         System.out.println(month);
+
+        retry(() -> inputView.readWorker());
     }
 
     public static <T> T retry(Supplier<T> supplier) {
