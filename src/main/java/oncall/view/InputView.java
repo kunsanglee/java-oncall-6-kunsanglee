@@ -30,6 +30,7 @@ public class InputView {
     private static final int MAX_MONTH = 12;
     private static final int MIN_WORKER_SIZE = 5;
     private static final int MAX_WORKER_SIZE = 35;
+    private static final int MIN_WORKER_NICKNAME_LENGTH = 2;
     private static final int MAX_WORKER_NICKNAME_LENGTH = 5;
     private static final char MIN_KOREAN_CHARACTER = '가';
     private static final char MAX_KOREAN_CHARACTER = '힣';
@@ -119,7 +120,8 @@ public class InputView {
 
     private static boolean isInvalidNickNameLength(List<String> parsedWeekdayWorkers) {
         return parsedWeekdayWorkers.stream()
-                .anyMatch(nickName -> nickName.length() > MAX_WORKER_NICKNAME_LENGTH);
+                .anyMatch(nickName -> nickName.length() < MIN_WORKER_NICKNAME_LENGTH
+                        || nickName.length() > MAX_WORKER_NICKNAME_LENGTH);
     }
 
     private static boolean isInvalidNickNameCharacter(List<String> parsedWeekdayWorkers) {
