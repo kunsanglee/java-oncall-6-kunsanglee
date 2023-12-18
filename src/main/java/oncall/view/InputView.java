@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import oncall.domain.Day;
 import oncall.domain.WorkCalendar;
+import oncall.domain.Workers;
 
 public class InputView {
 
@@ -45,5 +46,13 @@ public class InputView {
         } catch (DateTimeException e) {
             throw new IllegalArgumentException(INVALID_MONTH.getMessage());
         }
+    }
+
+    public Workers readWorker() {
+        System.out.println("평일 비상 근무 순번대로 사원 닉네임을 입력하세요> ");
+        List<String> weekdayWorkers = parseByComma(Console.readLine());
+        System.out.println("휴일 비상 근무 순번대로 사원 닉네임을 입력하세요> ");
+        List<String> holidayWorkers = parseByComma(Console.readLine());
+        return Workers.of(weekdayWorkers, holidayWorkers);
     }
 }
