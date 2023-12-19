@@ -17,6 +17,7 @@ public class WorkScheduler {
     public void run() {
         WorkCalendar workCalendar = retry(inputView::readWorkCalendar);
         Workers workers = retry(inputView::readWorker);
-        workCalendar.makeWorkSchedule(workers);
+        WorkSchedule workSchedule = workCalendar.makeWorkSchedule(workers);
+        outputView.printWorkSchedule(workSchedule);
     }
 }

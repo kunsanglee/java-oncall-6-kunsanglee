@@ -30,4 +30,12 @@ public enum Day {
                 .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_DAY.getMessage()))
                 .dayOfWeek;
     }
+
+    public static String of(DayOfWeek dayOfWeek) {
+        return Arrays.stream(values())
+                .filter(day -> day.dayOfWeek.equals(dayOfWeek))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_DAY.getMessage()))
+                .name;
+    }
 }
