@@ -12,6 +12,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Workers {
+    private static final int MIN_WORKER_SIZE = 5;
+    private static final int MAX_WORKER_SIZE = 35;
+    private static final int MIN_WORKER_NAME_LENGTH = 2;
+    private static final int MAX_WORKER_NAME_LENGTH = 5;
+    private static final char MIN_KOREAN_CHARACTER = '가';
+    private static final char MAX_KOREAN_CHARACTER = '힣';
+    private static final int FOR_NEXT_INDEX = 1;
     private final List<Worker> weekdayWorkers;
     private final List<Worker> holidayWorkers;
     private int weekdayWorkerIndex = 0;
@@ -46,26 +53,37 @@ public class Workers {
         if (isDuplicated(workers)) {
             throw new IllegalArgumentException(DUPLICATED_WORKER.getMessage());
         }
-        if (workers.size() < 5 || 35 < workers.size()) {
+        if (isInvalidWorkerSize(workers)) {
             throw new IllegalArgumentException(INVALID_WORKER_SIZE.getMessage());
         }
         if (isInvalidName(workers)) {
             throw new IllegalArgumentException(INVALID_WORKER_NAME_CHARACTER.getMessage());
         }
-        if (workers.stream().anyMatch(worker -> 5 < worker.length())) {
+        if (isInvalidNameLength(workers)) {
             throw new IllegalArgumentException(INVALID_WORKER_NAME_LENGTH.getMessage());
         }
-    }
-
-    private static boolean isInvalidName(List<String> workers) {
-        return workers.stream()
-                .anyMatch(worker -> worker.chars().anyMatch(character -> character < '가' || '힣' < character));
     }
 
     private static boolean isDuplicated(List<String> workers) {
         return workers.stream()
                 .distinct()
                 .count() != workers.size();
+    }
+
+    private static boolean isInvalidWorkerSize(List<String> workers) {
+        return workers.size() < MIN_WORKER_SIZE || MAX_WORKER_SIZE < workers.size();
+    }
+
+    private static boolean isInvalidName(List<String> workers) {
+        return workers.stream()
+                .anyMatch(worker -> worker.chars()
+                        .anyMatch(character -> character < MIN_KOREAN_CHARACTER || MAX_KOREAN_CHARACTER
+                                < character));
+    }
+
+    private static boolean isInvalidNameLength(List<String> workers) {
+        return workers.stream().anyMatch(
+                worker -> worker.length() < MIN_WORKER_NAME_LENGTH || MAX_WORKER_NAME_LENGTH < worker.length());
     }
 
     public Worker getWorker(DayOfWeek dayOfWeek, boolean isHoliday) {
@@ -90,7 +108,7 @@ public class Workers {
 
     private void changeWorkerSequence(List<Worker> workers, int index) {
         Worker currentWorker = workers.get(index);
-        int nextIndex = (index + 1) % workers.size();
+        int nextIndex = (index + FOR_NEXT_INDEX) % workers.size();
         Worker nextWorker = workers.get(nextIndex);
         workers.set(index, nextWorker);
         workers.set(nextIndex, currentWorker);
@@ -98,9 +116,9 @@ public class Workers {
 
     public void increaseIndex(DayOfWeek dayOfWeek, boolean isHoliday) {
         if (isHoliday(dayOfWeek, isHoliday)) {
-            holidayWorkerIndex = (holidayWorkerIndex + 1) % this.holidayWorkers.size();
+            holidayWorkerIndex = (holidayWorkerIndex + FOR_NEXT_INDEX) % this.holidayWorkers.size();
             return;
         }
-        weekdayWorkerIndex = (weekdayWorkerIndex + 1) % this.weekdayWorkers.size();
+        weekdayWorkerIndex = (weekdayWorkerIndex + FOR_NEXT_INDEX) % this.weekdayWorkers.size();
     }
 }

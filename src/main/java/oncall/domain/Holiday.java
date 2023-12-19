@@ -1,7 +1,8 @@
 package oncall.domain;
 
 import java.time.Month;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum Holiday {
     NEW_YEAR(Month.JANUARY, 1),
@@ -14,19 +15,23 @@ public enum Holiday {
     CHRISTMAS_DAY(Month.DECEMBER, 25),
     ;
 
-    private final Month month;
-    private final int date;
+    private static final Map<Month, DayOfMonth> MONTH_TO_HOLIDAY = new HashMap<>();
 
-    Holiday(Month month, int date) {
-        this.month = month;
-        this.date = date;
+    static {
+        for (Holiday holiday : values()) {
+            MONTH_TO_HOLIDAY.put(holiday.month, holiday.day);
+        }
     }
 
-    public static int of(Month month) {
-        return Arrays.stream(values())
-                .filter(holiday -> holiday.month.equals(month))
-                .findAny()
-                .map(holiday -> holiday.date)
-                .orElse(0);
+    private final Month month;
+    private final DayOfMonth day;
+
+    Holiday(Month month, int day) {
+        this.month = month;
+        this.day = DayOfMonth.of(month, day);
+    }
+
+    public static DayOfMonth of(Month month) {
+        return MONTH_TO_HOLIDAY.getOrDefault(month, DayOfMonth.NONE);
     }
 }

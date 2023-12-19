@@ -6,6 +6,8 @@ import java.time.Month;
 
 public class DayOfMonth {
     public static final DayOfMonth NONE = new DayOfMonth(0);
+    private static final int MIN_DATE = 1;
+    private static final int FEBRUARY_MAX_DAY = 28;
     private final int date;
 
     public DayOfMonth(int date) {
@@ -13,34 +15,30 @@ public class DayOfMonth {
     }
 
     public static DayOfMonth of(Month month, int date) {
-        int lastDateOfMonth = getLastDateOfMonth(month);
-        if (date < 1 || lastDateOfMonth < date) {
+        int lastDayOfMonth = getLastDayOfMonth(month);
+        if (date < MIN_DATE || lastDayOfMonth < date) {
             throw new IllegalArgumentException(INVALID_DATE.getMessage());
         }
         return new DayOfMonth(date);
     }
 
-    public static DayOfMonth lastDateOf(Month month) {
-        return new DayOfMonth(getLastDateOfMonth(month));
+    public static DayOfMonth lastDayOf(Month month) {
+        return new DayOfMonth(getLastDayOfMonth(month));
     }
 
-    private static int getLastDateOfMonth(Month month) {
+    private static int getLastDayOfMonth(Month month) {
         if (month.equals(Month.FEBRUARY)) {
-            return 28;
+            return FEBRUARY_MAX_DAY;
         }
         return month.maxLength();
     }
 
-    public static DayOfMonth getMonthOfHoliday(Month month) {
-        int holiday = Holiday.of(month);
-        if (holiday == 0) {
-            return DayOfMonth.NONE;
-        }
-        return DayOfMonth.of(month, holiday);
+    public static DayOfMonth getHolidayOfMonth(Month month) {
+        return Holiday.of(month);
     }
 
     public DayOfMonth increaseDay() {
-        return new DayOfMonth(this.date + 1);
+        return new DayOfMonth(this.date + MIN_DATE);
     }
 
     public boolean isSame(DayOfMonth date) {

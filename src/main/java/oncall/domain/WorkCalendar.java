@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkCalendar {
+    private static final int FIRST_DAY_OF_MONTH = 1;
+    private static final int ONE = 1;
     private final Month month;
     private final DayOfWeek dayOfWeek;
     private final DayOfMonth lastDateOfMonth;
@@ -14,12 +16,12 @@ public class WorkCalendar {
     public WorkCalendar(Month month, DayOfWeek dayOfWeek) {
         this.month = month;
         this.dayOfWeek = dayOfWeek;
-        this.lastDateOfMonth = DayOfMonth.lastDateOf(month);
-        this.monthOfHoliday = DayOfMonth.getMonthOfHoliday(month);
+        this.lastDateOfMonth = DayOfMonth.lastDayOf(month);
+        this.monthOfHoliday = DayOfMonth.getHolidayOfMonth(month);
     }
 
     public WorkSchedule makeWorkSchedule(Workers workers) {
-        DayOfMonth day = DayOfMonth.of(month, 1);
+        DayOfMonth day = DayOfMonth.of(month, FIRST_DAY_OF_MONTH);
         return new WorkSchedule(addWorker(workers, day));
     }
 
@@ -31,7 +33,7 @@ public class WorkCalendar {
             schedule.add(getWorkDate(workers, day, currentDayOfWeek, isHoliday, schedule));
             workers.increaseIndex(currentDayOfWeek, isHoliday);
             day = day.increaseDay();
-            currentDayOfWeek = currentDayOfWeek.plus(1);
+            currentDayOfWeek = currentDayOfWeek.plus(ONE);
         }
         return schedule;
     }
@@ -39,7 +41,8 @@ public class WorkCalendar {
     private WorkDate getWorkDate(Workers workers, DayOfMonth day, DayOfWeek currentDayOfWeek, boolean isHoliday,
                                  List<WorkDate> schedule) {
         Worker worker = workers.getWorker(currentDayOfWeek, isHoliday);
-        if (!schedule.isEmpty() && schedule.get(schedule.size() - 1).isSameWorker(worker)) {
+        int lastIndex = schedule.size() - ONE;
+        if (!schedule.isEmpty() && schedule.get(lastIndex).isSameWorker(worker)) {
             Worker changedWorker = workers.getChangedWorker(currentDayOfWeek, isHoliday);
             return new WorkDate(month, day, currentDayOfWeek, changedWorker);
         }

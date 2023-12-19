@@ -2,6 +2,7 @@ package oncall.view;
 
 import java.time.DayOfWeek;
 import oncall.domain.Day;
+import oncall.domain.DayOfMonth;
 import oncall.domain.Holiday;
 import oncall.domain.WorkDate;
 import oncall.domain.WorkSchedule;
@@ -22,9 +23,9 @@ public class OutputView {
     }
 
     private boolean isHoliday(WorkDate workDate) {
-        int holiday = Holiday.of(workDate.getMonth());
+        DayOfMonth holiday = Holiday.of(workDate.getMonth());
         DayOfWeek dayOfWeek = workDate.getDayOfWeek();
         return !dayOfWeek.equals(DayOfWeek.SATURDAY) && !dayOfWeek.equals(DayOfWeek.SUNDAY)
-                && holiday == workDate.getDayOfMonth().getValue();
+                && holiday.isSame(workDate.getDayOfMonth());
     }
 }
