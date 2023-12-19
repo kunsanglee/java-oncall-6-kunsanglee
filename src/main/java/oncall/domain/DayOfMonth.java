@@ -39,7 +39,7 @@ public class DayOfMonth {
         return DayOfMonth.of(month, holiday);
     }
 
-    public DayOfMonth increaseDate() {
+    public DayOfMonth increaseDay() {
         return new DayOfMonth(this.date + 1);
     }
 

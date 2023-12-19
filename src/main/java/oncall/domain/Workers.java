@@ -69,17 +69,20 @@ public class Workers {
     }
 
     public Worker getWorker(DayOfWeek dayOfWeek, boolean isHoliday) {
-        if (dayOfWeek.equals(DayOfWeek.SATURDAY) || dayOfWeek.equals(DayOfWeek.SUNDAY) || isHoliday) {
-            // 휴일 사원을 반환한다.
+        if (isHoliday(dayOfWeek, isHoliday)) {
             return this.holidayWorkers.get(holidayWorkerIndex);
         }
         return this.weekdayWorkers.get(weekdayWorkerIndex);
     }
 
-    public Worker getChangedWorker(boolean isHoliday) {
-        if (isHoliday) {
+    private static boolean isHoliday(DayOfWeek dayOfWeek, boolean isHoliday) {
+        return dayOfWeek.equals(DayOfWeek.SATURDAY) || dayOfWeek.equals(DayOfWeek.SUNDAY) || isHoliday;
+    }
+
+    public Worker getChangedWorker(DayOfWeek dayOfWeek, boolean isHoliday) {
+        if (isHoliday(dayOfWeek, isHoliday)) {
             changeWorkerSequence(this.holidayWorkers, holidayWorkerIndex);
-            return this.weekdayWorkers.get(holidayWorkerIndex);
+            return this.holidayWorkers.get(holidayWorkerIndex);
         }
         changeWorkerSequence(this.weekdayWorkers, weekdayWorkerIndex);
         return this.weekdayWorkers.get(weekdayWorkerIndex);
@@ -87,13 +90,14 @@ public class Workers {
 
     private void changeWorkerSequence(List<Worker> workers, int index) {
         Worker currentWorker = workers.get(index);
-        Worker nextWorker = workers.get(index + 1);
+        int nextIndex = (index + 1) % workers.size();
+        Worker nextWorker = workers.get(nextIndex);
         workers.set(index, nextWorker);
-        workers.set(index + 1, currentWorker);
+        workers.set(nextIndex, currentWorker);
     }
 
-    public void increaseIndex(boolean isHoliday) {
-        if (isHoliday) {
+    public void increaseIndex(DayOfWeek dayOfWeek, boolean isHoliday) {
+        if (isHoliday(dayOfWeek, isHoliday)) {
             holidayWorkerIndex = (holidayWorkerIndex + 1) % this.holidayWorkers.size();
             return;
         }
